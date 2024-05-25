@@ -2,29 +2,29 @@ def encrypt(input_text, depth):
     if depth == 1:
         return input_text
     
-    # Create the 2D list (rail) with depth rows and length of input_text columns filled with empty strings
+    
     rail = [['' for _ in range(len(input_text))] for _ in range(depth)]
     
-    # Variables to determine the direction of filling the rail
+    
     direction_down = False
     row, col = 0, 0
     
-    # Fill the rail matrix
+    
     for char in input_text:
         rail[row][col] = char
         col += 1
         
-        # Change direction if we hit the top or bottom
+        
         if row == 0 or row == depth - 1:
             direction_down = not direction_down
         
-        # Move to the next row in the appropriate direction
+        
         if direction_down:
             row += 1
         else:
             row -= 1
     
-    # Read the characters from the rail matrix row by row
+   
     encrypted_text = []
     for i in range(depth):
         for j in range(len(input_text)):
@@ -33,10 +33,68 @@ def encrypt(input_text, depth):
     
     return ''.join(encrypted_text)
 
-# Get input from the user
-input_text = input("Enter the text: ").replace(" ", "")  # Remove spaces from the input text
-depth = int(input("Enter the depth: "))
+def decrypt(encrypted_text, depth):
+    if depth == 1:
+        return encrypted_text
+    
+    
+    rail = [['' for _ in range(len(encrypted_text))] for _ in range(depth)]
+    
+    
+    direction_down = None
+    row, col = 0, 0
+    
+    
+    for char in encrypted_text:
+        rail[row][col] = '*'
+        col += 1
+        
+       
+        if row == 0 or row == depth - 1:
+            direction_down = not direction_down
+        
+        
+        if direction_down:
+            row += 1
+        else:
+            row -= 1
+    
+    
+    index = 0
+    for i in range(depth):
+        for j in range(len(encrypted_text)):
+            if rail[i][j] == '*' and index < len(encrypted_text):
+                rail[i][j] = encrypted_text[index]
+                index += 1
+    
+    
+    decrypted_text = []
+    row, col = 0, 0
+    direction_down = None
+    for _ in range(len(encrypted_text)):
+        decrypted_text.append(rail[row][col])
+        col += 1
+        
+        
+        if row == 0 or row == depth - 1:
+            direction_down = not direction_down
+        
+       
+        if direction_down:
+            row += 1
+        else:
+            row -= 1
+    
+    return ''.join(decrypted_text)
 
-# Encrypt the input text
-encrypted_text = encrypt(input_text, depth)
+
+full_name = input("Enter your full name: ").replace(" ", "")  
+depth = int(input("Enter the depth for encryption: "))
+
+
+encrypted_text = encrypt(full_name, depth)
 print(f"Encrypted text: {encrypted_text}")
+
+
+decrypted_text = decrypt(encrypted_text, depth)
+print(f"Decrypted text: {decrypted_text}")
